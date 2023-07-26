@@ -6,6 +6,7 @@ import cv2
 import config
 import preprocessing
 import numpy as np
+import torch
 
 from tqdm import tqdm
 from PIL import Image
@@ -112,14 +113,28 @@ def resize_and_save_images(data_df, save_dir, new_size=(224, 224)):
         save_path = os.path.join(label_save_dir, save_filename)
         cv2.imwrite(save_path, resized_image)
 
-# # Example usage:
-# Assuming your DataFrame is called 'data_df' and has columns 'filepaths' and 'labels'
-train_df, test_df, valid_df, class_count, average_height, average_weight, aspect_ratio = preprocessing.make_dataframes(config.DATASET_DIR)
-save_directory = 'resized_dataset/'  # Set the directory path where resized images will be saved
 
-resize_and_save_images(train_df, save_directory)
-resize_and_save_images(valid_df, save_directory)
-resize_and_save_images(test_df, save_directory)
+
+def log_training_process(
+        epoch, 
+        train_loss, 
+        val_loss, 
+        acc, 
+        macro_f1, 
+    ):
+    with open(config.TXT_RESULTS, 'a') as f:
+        f.write(f"Epoch {epoch+1} | train_loss: {train_loss:.3f} | val_loss: {val_loss:.3f} | val_acc: {acc:.3f} | f1_score: {macro_f1:.3f}\n")
+
+
+
+# # # Example usage:
+# # Assuming your DataFrame is called 'data_df' and has columns 'filepaths' and 'labels'
+# train_df, test_df, valid_df, class_count, average_height, average_weight, aspect_ratio = preprocessing.make_dataframes(config.DATASET_DIR)
+# save_directory = 'resized_dataset/'  # Set the directory path where resized images will be saved
+
+# resize_and_save_images(train_df, save_directory)
+# resize_and_save_images(valid_df, save_directory)
+# resize_and_save_images(test_df, save_directory)
 
 
 

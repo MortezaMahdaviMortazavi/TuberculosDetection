@@ -15,3 +15,8 @@ LEARNING_RATE: float = 0.001
 NUM_EPOCHS: int = 10
 MOMENTUM: float = 0.9
 WEIGHT_DECAY: float = 1e-5
+
+
+DEVICE = 'cuda'
+LOGFILE = 'log/model.pt'
+TXT_RESULTS = 'log/logs.txt'

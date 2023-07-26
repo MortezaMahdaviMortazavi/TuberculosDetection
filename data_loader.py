@@ -28,15 +28,17 @@ class TBDataset(Dataset):
         if self.transform:
             image = self.transform(image)
 
+        label = torch.tensor(self.class_labels[label])
+
         return image, label
     
     def _default_transform(self):
         return transforms.Compose([
             transforms.Lambda(lambda x: x.convert('RGB')),
-            transforms.RandomResizedCrop(224),
-            transforms.RandomHorizontalFlip(),
+            transforms.Resize(128),
+            transforms.RandomHorizontalFlip(p=0.3),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            transforms.Normalize(mean=[0.5013, 0.5097, 0.5125],std=[0.2587, 0.2588, 0.2601]),
         ])
 
     
