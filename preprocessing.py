@@ -15,6 +15,12 @@ def get_filepaths_and_labels(sdir):
             for f in tqdm(flist, ncols=130, desc=f'{_class:25s}', unit='files', colour='blue'):
                 fpath = os.path.join(classpath, f)
                 filepaths.append(fpath)
+
+                if _class == 'Augmented_normal':
+                    _class = 'Normal'
+                elif _class == 'Augmented_tuberculosis':
+                    _class = 'Tuberculosis'
+                    
                 labels.append(_class)
     return filepaths, labels
 

@@ -5,6 +5,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 from preprocessing import make_dataframes
 from torch.utils.data import Dataset,DataLoader
+# from imbalance_handling import trim_dataset
 
 class TBDataset(Dataset):
     def __init__(self, data_df, transform=None):
@@ -35,8 +36,7 @@ class TBDataset(Dataset):
     def _default_transform(self):
         return transforms.Compose([
             transforms.Lambda(lambda x: x.convert('RGB')),
-            transforms.Resize(128),
-            transforms.RandomHorizontalFlip(p=0.3),
+            transforms.Resize((128,128)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5013, 0.5097, 0.5125],std=[0.2587, 0.2588, 0.2601]),
         ])

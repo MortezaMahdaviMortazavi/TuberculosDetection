@@ -115,6 +115,46 @@ def resize_and_save_images(data_df, save_dir, new_size=(224, 224)):
 
 
 
+def plot_training_results(train_accuracy, train_loss, val_accuracy, val_loss, start_epoch=0):
+    num_epochs = len(train_accuracy)
+    epochs = np.arange(start_epoch, start_epoch + num_epochs)
+
+    min_val_loss_epoch = np.argmin(val_loss)  # This is the epoch with the lowest validation loss
+    min_val_loss = val_loss[min_val_loss_epoch]
+    max_val_accuracy_epoch = np.argmax(val_accuracy)
+    max_val_accuracy = val_accuracy[max_val_accuracy_epoch]
+
+    plt.style.use('fivethirtyeight')
+    min_val_loss_label = f'Best epoch = {min_val_loss_epoch + 1 + start_epoch}'
+    max_val_accuracy_label = f'Best epoch = {max_val_accuracy_epoch + 1 + start_epoch}'
+
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(25, 10))
+
+    axes[0].plot(epochs, train_loss, 'r', label='Training loss')
+    axes[0].plot(epochs, val_loss, 'g', label='Validation loss')
+    axes[0].scatter(min_val_loss_epoch + 1 + start_epoch, min_val_loss, s=150, c='blue', label=min_val_loss_label)
+    axes[0].scatter(epochs, train_loss, s=100, c='red')
+    axes[0].set_title('Training and Validation Loss')
+    axes[0].set_xlabel('Epochs', fontsize=18)
+    axes[0].set_ylabel('Loss', fontsize=18)
+    axes[0].legend()
+
+    axes[1].plot(epochs, train_accuracy, 'r', label='Validation F1-Score')
+    axes[1].scatter(epochs, train_accuracy, s=100, c='red')
+    axes[1].plot(epochs, val_accuracy, 'g', label='Validation Accuracy')
+    axes[1].scatter(max_val_accuracy_epoch + 1 + start_epoch, max_val_accuracy, s=150, c='blue', label=max_val_accuracy_label)
+    axes[1].set_title('Validation Accuracy and F1-Score')
+    axes[1].set_xlabel('Epochs', fontsize=18)
+    axes[1].set_ylabel('Accuracy - F1-Score', fontsize=18)
+    axes[1].legend()
+
+    plt.tight_layout()
+    plt.show()
+    return min_val_loss_epoch
+
+
+
+
 def log_training_process(
         epoch, 
         train_loss, 

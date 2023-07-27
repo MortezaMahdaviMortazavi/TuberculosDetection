@@ -1,6 +1,5 @@
 # Dataset path
-DATASET_DIR = 'dataset/'
-
+DATASET_DIR = 'resized_dataset'
 # Images paths
 NORMAL_IMAGES_FOLDER = 'dataset/Normal/'
 TUBERCULOSIS_IMAGES_FOLDER = 'dataset/Tuberculosis'
