@@ -1,2 +1,2 @@
-# Roshan-Internship
-In this repository I implement project of my internship in roshan-ai company
+# TuberculosDetection
+In this repository I implement first project of my internship in roshan-ai company
