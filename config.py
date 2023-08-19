@@ -9,9 +9,9 @@ NORMAL_XLSX_PATH = 'dataset/Normal.metadata.xlsx'
 TUBERCULOSIS_XLSX_PATH = 'dataset/Tuberculosis.metadata.xlsx'
 
 # Hyperparameters
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 LEARNING_RATE: float = 0.001
-NUM_EPOCHS: int = 10
+NUM_EPOCHS: int = 30
 MOMENTUM: float = 0.9
 WEIGHT_DECAY: float = 1e-5
 

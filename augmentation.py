@@ -90,8 +90,8 @@ def augmentation_main():
     os.makedirs(output_dir_tuberculous, exist_ok=True)
 
     # Create the Augmentation objects
-    augmentor_normal = Augmentation(output_path=output_dir_normal, probability=0.6)  # Set lower probability for Normal images
-    augmentor_tb = Augmentation(output_path=output_dir_tuberculous, probability=0.8)  # Set higher probability for TB images
+    augmentor_normal = Augmentation(output_path=output_dir_normal, probability=0.5)  # Set lower probability for Normal images
+    augmentor_tb = Augmentation(output_path=output_dir_tuberculous, probability=0.9)  # Set higher probability for TB images
 
     # Augment Normal images (randomly choose 500 samples)
     normal_images_dir = os.path.join(input_dir, 'Normal')
@@ -107,7 +107,7 @@ def augmentation_main():
     tb_images_dir = os.path.join(input_dir, 'Tuberculosis')
     tb_images = os.listdir(tb_images_dir)
     num_tb_images = 700
-    num_augmentations_needed = 2000 - num_tb_images
+    num_augmentations_needed = 4000 - num_tb_images
 
     for i in tqdm(range(num_augmentations_needed)):
         img_file = random.choice(tb_images)

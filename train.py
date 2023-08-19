@@ -11,6 +11,8 @@ import numpy as np
 def train(model, criterion, optimizer, train_loader):
     model.train()
     running_loss = 0.0
+    true_labels = []
+    pred_labels = []
     for images, labels in tqdm(train_loader):
         images, labels = images.to(config.DEVICE), labels.to(config.DEVICE)
         optimizer.zero_grad()
@@ -20,7 +22,16 @@ def train(model, criterion, optimizer, train_loader):
         loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
-    return running_loss / len(train_loader.dataset)
+
+        _, predicted = torch.max(outputs, 1)
+        true_labels.extend(labels.cpu().numpy())
+        # print("labels shape",labels.shape,"pred shape",predicted.shape)
+        pred_labels.extend(predicted.cpu().numpy())
+        
+    true_labels = torch.tensor(true_labels)
+    pred_labels = torch.tensor(pred_labels)
+    acc = metrics.accuracy(true_labels, pred_labels)
+    return running_loss / len(train_loader.dataset) , acc
 
 # Testing loop
 def test(model, criterion, test_loader):
@@ -36,7 +47,6 @@ def test(model, criterion, test_loader):
             running_loss += loss.item() * images.size(0)
             _, predicted = torch.max(outputs, 1)
             true_labels.extend(labels.cpu().numpy())
-            # print("labels shape",labels.shape,"pred shape",predicted.shape)
             pred_labels.extend(predicted.cpu().numpy())
     
     avg_loss = running_loss / len(test_loader.dataset)
@@ -51,6 +61,7 @@ def test(model, criterion, test_loader):
 
 def fit(model, criterion, optimizer, train_loader, val_loader,test_loader,num_epochs, log_file, save_dir):
     train_losses = np.zeros(num_epochs)
+    train_accuricies = np.zeros(num_epochs)
     val_losses = np.zeros(num_epochs)
     val_accuracies = np.zeros(num_epochs)
     val_f1_scores = np.zeros(num_epochs)
@@ -62,14 +73,14 @@ def fit(model, criterion, optimizer, train_loader, val_loader,test_loader,num_ep
     best_model_state = None
 
     for epoch in range(num_epochs):
-        train_loss = train(model, criterion, optimizer, train_loader)
+        train_loss , train_acc = train(model, criterion, optimizer, train_loader)
         val_loss, val_acc, macro_f1 = test(model, criterion, val_loader)
         train_losses[epoch] = train_loss
         val_losses[epoch] = val_loss
         val_accuracies[epoch] = val_acc
         val_f1_scores[epoch] = macro_f1
         utils.log_training_process(epoch, train_loss, val_loss, val_acc, macro_f1)
-        print(f"Epoch {epoch+1} | train_loss: {train_loss:.3f} | val_loss: {val_loss:.3f} | val_acc: {val_acc:.3f} | f1_score: {macro_f1:.3f}")
+        print(f"Epoch {epoch+1} | train_loss: {train_loss:.3f} | train_acc: {train_acc:.3f} | val_loss: {val_loss:.3f} | val_acc: {val_acc:.3f} | f1_score: {macro_f1:.3f}")
         # Save the model with the best validation loss
         if val_loss < best_val_loss:
             best_val_loss = val_loss
@@ -88,4 +99,4 @@ def fit(model, criterion, optimizer, train_loader, val_loader,test_loader,num_ep
     print(f"test_loss: {test_loss:.3f} | test_acc: {test_acc:.3f} | f1_score: {test_macro_f1:.3f}")
 
     print("Training completed!")
-    return train_losses,val_losses,val_accuracies,val_f1_scores
+    return train_losses,train_accuricies,val_losses,val_accuracies,val_f1_scores

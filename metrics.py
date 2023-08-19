@@ -56,6 +56,8 @@ class F1ScoreCrossEntropyLoss(nn.Module):
         loss = self.alpha * ce_loss - self.beta * torch.log(torch.tensor(f1) + self.epsilon) + 1
         return loss.mean()
     
+
+
 # this loss caculate new weight base on f1score each mini batch 
 class F1_Loss(nn.Module):
     def __init__(self, epsilon=1e-7):

@@ -44,7 +44,10 @@ class TBDataset(Dataset):
     
 
 def create_dataloader(train_transform,valid_transform,test_transform):
-    train_df, test_df, valid_df, class_count, average_height, average_weight, aspect_ratio = make_dataframes(config.DATASET_DIR)
+    import imbalance_handling
+    import preprocessing
+    import config
+    train_df, test_df, valid_df, class_count, average_height, average_weight, aspect_ratio = preprocessing.make_dataframes(config.DATASET_DIR)
     train_dataset = TBDataset(train_df, transform=train_transform)
     valid_dataset = TBDataset(valid_df, transform=valid_transform)
     test_dataset = TBDataset(test_df, transform=test_transform)
